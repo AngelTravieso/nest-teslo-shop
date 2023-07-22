@@ -12,7 +12,7 @@ export class Product {
     }) // => @Column('tipo_column') OJO: No todos los tipos de datos son aceptados por postgres
     title: string;
 
-    @Column('numeric', {
+    @Column('float', {
         default: 0, // => valor default del campo
     })
     price: number;
