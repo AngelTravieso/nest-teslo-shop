@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -43,5 +43,22 @@ export class Product {
 
     // tags
     // images
+    
+    // Llama un método cuyo decorador es aplicado antes de la inserción de la entidad
+    @BeforeInsert()
+    checkSlugInsert() { // Método personalizado que se ejecuta antes de hacer el insert en la BD
+        // Si no viene slug
+        if( !this.slug ) { // hago this para hacer referencia a la instancia de mi entidad
+            this.slug = this.title; // lo tomo del título
+        }
+
+        // Si viene tomo el slug y modifico el string
+        this.slug = this.slug
+            .toLocaleLowerCase()
+            .replaceAll(' ', '_')
+            .replaceAll("'", '')
+    }
+
+    // @BeforeUpdate()
 
 }

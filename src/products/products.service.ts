@@ -20,6 +20,19 @@ export class ProductsService {
     
     try {
 
+      // Si no viene el slug lo tomamos del titulo  // * Ahora está en el BeforeInsert del entity
+      // if( !createProductDto.slug ) {
+      //   createProductDto.slug = createProductDto.title
+      //     .toLocaleLowerCase()
+      //     .replaceAll(' ', '_')
+      //     .replaceAll("'", '');
+      // } else {
+      //   createProductDto.slug = createProductDto.slug
+      //     .toLocaleLowerCase()
+      //     .replaceAll(' ', '_')
+      //     .replaceAll("'", '');
+      // }
+
       // creamos el registro en memoria, con el ID y todo
       const product = this.productRepository.create( createProductDto );
 
