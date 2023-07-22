@@ -92,7 +92,9 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-
+    /*
+    preload => crea una entidad de un objeto plano JavaScript, si la entidad existe en la BD, entonces la carga (y todo lo relacionado a ella) reemplazando todos los valores con los nuevos facilitados en el objeto JavaScript y retorna la nueva entidad
+    */
     const product = await this.productRepository.preload({
       id,
       ...updateProductDto,

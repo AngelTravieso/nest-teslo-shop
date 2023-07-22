@@ -59,6 +59,13 @@ export class Product {
             .replaceAll("'", '')
     }
 
-    // @BeforeUpdate()
+    @BeforeUpdate()
+    checkSlugUpdate() {
+        // Si viene tomo el slug y modifico el string
+        this.slug = this.slug
+            .toLocaleLowerCase()
+            .replaceAll(' ', '_')
+            .replaceAll("'", '')
+    }
 
 }
