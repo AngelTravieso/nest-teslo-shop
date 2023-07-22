@@ -72,7 +72,14 @@ export class ProductsService {
       product = await this.productRepository.findOneBy({ id: term });
     } else {
       // Buscar por slug
-      product = await this.productRepository.findOneBy({ slug: term });
+      // product = await this.productRepository.findOneBy({ slug: term });
+      const queryBuilder = this.productRepository.createQueryBuilder();
+      product = await queryBuilder
+      // (:=) indica que son argumentos que se le van a proporcionar al query
+        .where('UPPER(title) =:title or slug =:slug', { // debe ir pegado =:title (el campo)
+          title: term.toLocaleUpperCase(),
+          slug: term.toLowerCase(),
+        }).getOne(); // obtener solo un registro
     }
     
     // const product = await this.productRepository.findOneBy({ term });
