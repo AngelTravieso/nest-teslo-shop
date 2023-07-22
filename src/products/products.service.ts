@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -48,20 +48,44 @@ export class ProductsService {
 
   }
 
-  findAll() {
-    return `This action returns all products`;
+  // TODO: paginar
+  async findAll() {
+    return await this.productRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne( id: string ) {
+    
+    const product = await this.productRepository.findOneBy({ id });
+
+    if(!product) {
+      throw new NotFoundException(`Product with ID ${ id } not found`);
+    }
+
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+
+    /*
+    delete => ejecuta un query de eliminación rápido y eficiente
+    no verifica que la entidad este en la BD
+    */
+    const { affected } = await this.productRepository.delete( id );
+
+    if( affected === 0 ) {
+      throw new BadRequestException(`Product with ID ${ id } not found`);
+    }
+
+    // Otra manera de hacerlo
+    // const product = await this.findOne( id );
+    // await this.productRepository.remove( product );
+
+    return;
+    
   }
 
   // Método general para escuchar excepciones
