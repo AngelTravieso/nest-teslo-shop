@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ProductImage } from "./product-image.entity";
 
 @Entity()
 export class Product {
@@ -48,7 +49,14 @@ export class Product {
     tags: string[];
 
 
-    // images
+    @OneToMany(
+        () => ProductImage,
+        productImage => productImage.product,
+        {
+            cascade: true, // En cascada
+        }
+    ) // => Relacion de uno a muchos
+    images?: ProductImage; // => Un producto puede tener muchas imágenes
     
     // Llama un método cuyo decorador es aplicado antes de la inserción de la entidad
     @BeforeInsert()

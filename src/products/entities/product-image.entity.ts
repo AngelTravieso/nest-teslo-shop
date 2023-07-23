@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./product.entity";
 
 /*
     No lleva como nombre ProductImageEntity para evitar que la tabla de scree con ese nombre
@@ -11,5 +12,11 @@ export class ProductImage {
 
     @Column('text')
     url: string;
+
+    @ManyToOne(
+        () => Product,
+        product => product.images,
+    ) // => Relación de muchos a uno
+    product: Product; // => Muchas imágenes pueden tener solo un producto
 
 }
