@@ -41,7 +41,13 @@ export class Product {
     @Column('text')
     gender: string;
 
-    // tags
+    @Column('text', {
+        array: true,
+        default: [],
+    })
+    tags: string[];
+
+
     // images
     
     // Llama un método cuyo decorador es aplicado antes de la inserción de la entidad
