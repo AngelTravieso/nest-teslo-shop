@@ -6,7 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 
-import { Product } from './entities/product.entity';
+import { Product, ProductImage } from './entities';
 import { validate as isUUID } from 'uuid';
 
 @Injectable()
@@ -17,7 +17,11 @@ export class ProductsService {
   // Recomendado usar patrón repository para trabajar con la BD
   constructor(
     @InjectRepository( Product )
-    private readonly productRepository: Repository<Product>
+    private readonly productRepository: Repository<Product>,
+
+    @InjectRepository( ProductImage )
+    private readonly productImageRepository: Repository<ProductImage>
+
   ){}
 
   async create(createProductDto: CreateProductDto) {
@@ -37,14 +41,19 @@ export class ProductsService {
       //     .replaceAll("'", '');
       // }
 
+      const { images = [], ...productDetails } = createProductDto;
+
       // creamos el registro en memoria, con el ID y todo
-      const product = this.productRepository.create( createProductDto );
+      const product = this.productRepository.create({
+        ...productDetails, // Exparsir las propiedades del createProdutDto
+        images: images.map( image => this.productImageRepository.create({ url: image }) ),
+      });
 
       // Luego lo grabo e impacto la BD
       await this.productRepository.save( product );
 
       // Regreso el producto creado
-      return product;
+      return { ...product, images }; // Regresar las mismas imágenes que envia el front(les quito el ID de BD)
 
     } catch(err) {
       this.handleDBException( err )
@@ -98,6 +107,7 @@ export class ProductsService {
     const product = await this.productRepository.preload({
       id,
       ...updateProductDto,
+      images: [],
     });
 
     if( !product ) throw new NotFoundException(`Product with id: ${ id } not found`);

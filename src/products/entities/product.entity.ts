@@ -56,7 +56,7 @@ export class Product {
             cascade: true, // En cascada
         }
     ) // => Relacion de uno a muchos
-    images?: ProductImage; // => Un producto puede tener muchas imágenes
+    images?: ProductImage[]; // => Un producto puede tener muchas imágenes
     
     // Llama un método cuyo decorador es aplicado antes de la inserción de la entidad
     @BeforeInsert()
